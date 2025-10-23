@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Туризм</title>
+</head>
+<body>
+    <h1>Популярные туры</h1>
+    <ul>
+        {% for tour in tours %}
+        <li>
+            <h2>{{ tour.title }}</h2>
+            <p>Страна: {{ tour.country }}</p>
+            <p>Цена: {{ tour.price }} руб.</p>
+            <p>Длительность: {{ tour.duration }} дней</p>
+            <a href="{% url 'tour_detail' tour.id %}">Подробнее</a>
+        </li>
+        {% empty %}
+        <li>Туры не найдены.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

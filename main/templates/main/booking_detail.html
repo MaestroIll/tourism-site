@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Бронирование #{{ booking.id }}</title>
+</head>
+<body>
+    <h1>Бронирование #{{ booking.id }}</h1>
+    <p>Клиент: {{ booking.client.name }}</p>
+    <p>Тур: {{ booking.tour.title }}</p>
+    <p>Отель: {{ booking.hotel.name }}</p>
+    <p>Транспорт: {{ booking.transport.type }} - {{ booking.transport.company }}</p>
+    <p>Дата бронирования: {{ booking.book_date }}</p>
+    <p>Статус: {{ booking.status }}</p>
+    <p>Итоговая цена: {{ booking.total_price }} руб.</p>
+
+    <a href="{% url 'create_payment' booking.id %}">Оплатить бронирование</a>
+    <br><a href="{% url 'home' %}">Назад к турам</a>
+</body>
+</html>
+

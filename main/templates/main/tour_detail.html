@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ tour.title }}</title>
+</head>
+<body>
+    <h1>{{ tour.title }}</h1>
+    <p>Страна: {{ tour.country }}</p>
+    <p>Цена: {{ tour.price }} руб.</p>
+    <p>Длительность: {{ tour.duration }} дней</p>
+    <p>Дата начала: {{ tour.start_date }}</p>
+
+    <h2>Доступные отели</h2>
+    <ul>
+        {% for hotel in hotels %}
+        <li>{{ hotel.name }} ({{ hotel.stars }}⭐) - {{ hotel.price_per_night }} руб./ночь</li>
+        {% empty %}
+        <li>Нет доступных отелей</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Транспорт</h2>
+    <ul>
+        {% for t in transports %}
+        <li>{{ t.type }} - {{ t.company }} ({{ t.route }})</li>
+        {% empty %}
+        <li>Нет транспорта</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'create_booking' tour.id %}">Забронировать тур</a>
+    <br><a href="{% url 'home' %}">Назад к турам</a>
+</body>
+</html>
