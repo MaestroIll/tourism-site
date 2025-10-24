@@ -1,34 +1,129 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ tour.title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .info {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-top: 30px;
+        }
+        .section h2 {
+            color: #e67e22;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #e67e22;
+            padding-bottom: 5px;
+        }
+        ul {
+            list-style: none;
+        }
+        li {
+            padding: 12px;
+            background: #fff;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+        .btn {
+            display: inline-block;
+            background: #e67e22;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+            margin-top: 15px;
+            font-size: 1em;
+        }
+        .btn:hover {
+            background: #d35400;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .info, li {
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ tour.title }}</h1>
-    <p>Страна: {{ tour.country }}</p>
-    <p>Цена: {{ tour.price }} руб.</p>
-    <p>Длительность: {{ tour.duration }} дней</p>
-    <p>Дата начала: {{ tour.start_date }}</p>
+    <div class="container">
+        <h1>{{ tour.title }}</h1>
 
-    <h2>Доступные отели</h2>
-    <ul>
-        {% for hotel in hotels %}
-        <li>{{ hotel.name }} ({{ hotel.stars }}⭐) - {{ hotel.price_per_night }} руб./ночь</li>
-        {% empty %}
-        <li>Нет доступных отелей</li>
-        {% endfor %}
-    </ul>
+        <div class="info">
+            <p><strong>Страна:</strong> {{ tour.country }}</p>
+            <p><strong>Цена:</strong> {{ tour.price }} руб.</p>
+            <p><strong>Длительность:</strong> {{ tour.duration }} дней</p>
+            <p><strong>Дата начала:</strong> {{ tour.start_date }}</p>
+        </div>
 
-    <h2>Транспорт</h2>
-    <ul>
-        {% for t in transports %}
-        <li>{{ t.type }} - {{ t.company }} ({{ t.route }})</li>
-        {% empty %}
-        <li>Нет транспорта</li>
-        {% endfor %}
-    </ul>
+        <div class="section">
+            <h2>🏨 Доступные отели</h2>
+            <ul>
+                {% for hotel in hotels %}
+                <li>{{ hotel.name }} ({{ hotel.stars }}⭐) - {{ hotel.price_per_night }} руб./ночь</li>
+                {% empty %}
+                <li>Нет доступных отелей</li>
+                {% endfor %}
+            </ul>
+        </div>
 
-    <a href="{% url 'create_booking' tour.id %}">Забронировать тур</a>
-    <br><a href="{% url 'home' %}">Назад к турам</a>
+        <div class="section">
+            <h2>✈️ Транспорт</h2>
+            <ul>
+                {% for t in transports %}
+                <li>{{ t.type }} - {{ t.company }} ({{ t.route }})</li>
+                {% empty %}
+                <li>Нет транспорта</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <a href="{% url 'create_booking' tour.id %}" class="btn">Забронировать тур</a>
+        <br><a href="{% url 'home' %}" class="back-link">← Назад к турам</a>
+    </div>
 </body>
 </html>

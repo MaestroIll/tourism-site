@@ -1,12 +1,21 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Client, Tour, Hotel, Transport, Booking, Payment
-from .forms import BookingForm, PaymentForm  # Эти формы нужно будет создать в forms.py
-
+from .forms import BookingForm, PaymentForm 
+from django.db.models import Q
 
 # Главная страница: список всех туров
+
 def home(request):
-    tours = Tour.objects.all()
-    return render(request, 'main/home.html', {'tours': tours})
+    query = request.GET.get('q', '').strip()
+    if query:
+        tours = Tour.objects.filter(
+            Q(title__icontains=query) |
+            Q(country__icontains=query) |
+            Q(start_date__icontains=query)
+        )
+    else:
+        tours = Tour.objects.all()
+    return render(request, 'main/home.html', {'tours': tours, 'query': query})
 
 
 # Страница отдельного тура
@@ -65,6 +74,3 @@ def create_payment(request, booking_id):
         'form': form,
         'booking': booking
     })
-
-
-# Create your views here.

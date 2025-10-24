@@ -86,5 +86,3 @@ class Payment(models.Model):
     def __str__(self):
         return f"Платёж #{self.id} ({self.amount} руб.)"
 
-
-# Create your models here.

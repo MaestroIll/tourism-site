@@ -1,20 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Бронирование #{{ booking.id }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .info-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e67e22;
+        }
+        .info-item strong {
+            color: #34495e;
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .price {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #e67e22;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            background: #e67e22;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .btn:hover {
+            background: #d35400;
+        }
+        .back-link {
+            display: inline-block;
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 15px;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Бронирование #{{ booking.id }}</h1>
-    <p>Клиент: {{ booking.client.name }}</p>
-    <p>Тур: {{ booking.tour.title }}</p>
-    <p>Отель: {{ booking.hotel.name }}</p>
-    <p>Транспорт: {{ booking.transport.type }} - {{ booking.transport.company }}</p>
-    <p>Дата бронирования: {{ booking.book_date }}</p>
-    <p>Статус: {{ booking.status }}</p>
-    <p>Итоговая цена: {{ booking.total_price }} руб.</p>
+    <div class="container">
+        <h1>✅ Бронирование #{{ booking.id }}</h1>
 
-    <a href="{% url 'create_payment' booking.id %}">Оплатить бронирование</a>
-    <br><a href="{% url 'home' %}">Назад к турам</a>
+        <div class="info-grid">
+            <div class="info-item">
+                <strong>Клиент:</strong> {{ booking.client.name }}
+            </div>
+            <div class="info-item">
+                <strong>Тур:</strong> {{ booking.tour.title }}
+            </div>
+            <div class="info-item">
+                <strong>Отель:</strong> {{ booking.hotel.name }}
+            </div>
+            <div class="info-item">
+                <strong>Транспорт:</strong> {{ booking.transport.type }} - {{ booking.transport.company }}
+            </div>
+            <div class="info-item">
+                <strong>Дата бронирования:</strong> {{ booking.book_date }}
+            </div>
+            <div class="info-item">
+                <strong>Статус:</strong> {{ booking.status }}
+            </div>
+        </div>
+
+        <div class="price">Итоговая цена: {{ booking.total_price }} руб.</div>
+
+        <a href="{% url 'create_payment' booking.id %}" class="btn">💳 Оплатить бронирование</a>
+        <br><a href="{% url 'home' %}" class="back-link">← Назад к турам</a>
+    </div>
 </body>
 </html>
-

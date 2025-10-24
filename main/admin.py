@@ -49,4 +49,3 @@ class PaymentAdmin(admin.ModelAdmin):
     list_display = ('id', 'booking', 'amount', 'pay_date', 'payment_method')
     list_filter = ('payment_method', 'pay_date')
 
-# Register your models here.

@@ -1,22 +1,166 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Туризм</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf9 100%);
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 20px 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 {
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        /* Поисковая строка */
+        .search-box {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .search-box input {
+            padding: 14px 20px;
+            width: 100%;
+            max-width: 500px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .search-box input:focus {
+            border-color: #e67e22;
+        }
+        .search-box button {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .search-box button:hover {
+            background: #d35400;
+        }
+
+        /* Результаты */
+        .tour-list {
+            display: grid;
+            gap: 20px;
+        }
+        .tour-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .tour-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+        }
+        .tour-card h2 {
+            color: #e67e22;
+            margin-bottom: 12px;
+            font-size: 1.6em;
+        }
+        .tour-card p {
+            margin: 8px 0;
+            color: #555;
+        }
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            margin-top: 12px;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+        @media (max-width: 600px) {
+            .search-box {
+                flex-direction: column;
+            }
+            .search-box button {
+                padding: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Популярные туры</h1>
-    <ul>
-        {% for tour in tours %}
-        <li>
-            <h2>{{ tour.title }}</h2>
-            <p>Страна: {{ tour.country }}</p>
-            <p>Цена: {{ tour.price }} руб.</p>
-            <p>Длительность: {{ tour.duration }} дней</p>
-            <a href="{% url 'tour_detail' tour.id %}">Подробнее</a>
-        </li>
-        {% empty %}
-        <li>Туры не найдены.</li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <header>
+            <h1>🌍 Найдите свой идеальный тур</h1>
+
+            <!-- Форма поиска -->
+            <form method="get" class="search-box">
+                <input
+                    type="text"
+                    name="q"
+                    placeholder="Поиск по названию или стране (например: Италия, Греция, Бали...)"
+                    value="{{ query }}"
+                >
+                <button type="submit">Найти</button>
+            </form>
+        </header>
+
+        <!-- Результаты -->
+        <div class="tour-list">
+            {% for tour in tours %}
+            <div class="tour-card">
+                <h2>{{ tour.title }}</h2>
+                <p><strong>Страна:</strong> {{ tour.country }}</p>
+                <p><strong>Цена:</strong> {{ tour.price }} руб.</p>
+                <p><strong>Длительность:</strong> {{ tour.duration }} дней</p>
+                <p><strong>Дата начала:</strong> {{ tour.start_date }}</p>
+                <a href="{% url 'tour_detail' tour.id %}" class="btn">Подробнее</a>
+            </div>
+            {% empty %}
+            <div class="empty">
+                {% if query %}
+                    Ничего не найдено по запросу «<strong>{{ query }}</strong>».
+                {% else %}
+                    Туры не найдены.
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 </html>
