@@ -59,9 +59,9 @@ class Booking(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     def calculate_total_price(self):
-        hotel_cost = self.hotel.price_per_night * self.tour.duration
-        transport_cost = 5000
-        return self.tour.price + hotel_cost + transport_cost
+      hotel_cost = self.hotel.price_per_night * self.tour.duration
+      transport_cost = self.transport.price  # Предполагается, что у Transport есть поле price
+      return self.tour.price + hotel_cost + transport_cost
 
     def save(self, *args, **kwargs):
         self.total_price = self.calculate_total_price()

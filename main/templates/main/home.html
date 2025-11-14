@@ -1,10 +1,14 @@
+<!-- main/templates/main/home.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Туризм</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Подключаем Google Fonts (похожий на используемый на Coral.ru) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Добавляем Font Awesome для иконок (опционально, но рекомендуется для большей похожести) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,25 +16,27 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf9 100%);
-            color: #2c3e50;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
             line-height: 1.6;
-            padding: 20px 0;
         }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        header {
+
+        /* Шапка сайта */
+        .header {
+            background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
+            color: white;
+            padding: 30px 20px;
             text-align: center;
-            margin-bottom: 30px;
         }
-        h1 {
-            font-size: 2.2em;
-            color: #2c3e50;
-            margin-bottom: 20px;
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
         }
 
         /* Поисковая строка */
@@ -38,63 +44,125 @@
             display: flex;
             gap: 10px;
             justify-content: center;
-            margin-bottom: 30px;
+            margin: 30px auto;
+            max-width: 800px;
+            padding: 10px;
         }
         .search-box input {
             padding: 14px 20px;
             width: 100%;
             max-width: 500px;
             border: 2px solid #ddd;
-            border-radius: 50px;
+            border-radius: 8px;
             font-size: 1em;
             outline: none;
             transition: border-color 0.3s;
         }
         .search-box input:focus {
-            border-color: #e67e22;
+            border-color: #007bff;
         }
         .search-box button {
-            background: #e67e22;
+            background: #e67e22; /* Оранжевый цвет кнопки, как на Coral.ru */
             color: white;
             border: none;
-            padding: 0 25px;
-            border-radius: 50px;
+            padding: 14px 25px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 1em;
             transition: background 0.3s;
         }
         .search-box button:hover {
             background: #d35400;
         }
 
-        /* Результаты */
+        /* Секция "Надо брать" (можно добавить подобную секцию) */
+        .featured-section {
+            padding: 40px 20px;
+            background-color: white;
+            margin: 20px auto;
+            max-width: 1200px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .featured-section h2 {
+            color: #0056b3;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+            font-weight: 600;
+        }
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .featured-card {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .featured-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+        .featured-card i {
+            font-size: 2.5em;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+        .featured-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .featured-card p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Результаты поиска (туры) */
         .tour-list {
             display: grid;
             gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         .tour-card {
             background: white;
-            border-radius: 16px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .tour-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+            box-shadow: 0 6px 24px rgba(0,0,0,0.1);
         }
         .tour-card h2 {
-            color: #e67e22;
+            color: #0056b3;
             margin-bottom: 12px;
             font-size: 1.6em;
+            font-weight: 600;
         }
         .tour-card p {
             margin: 8px 0;
             color: #555;
         }
+        .tour-card .price {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #e67e22;
+            margin: 10px 0;
+        }
         .btn {
             display: inline-block;
-            background: #3498db;
+            background: #e67e22;
             color: white;
             padding: 10px 20px;
             text-decoration: none;
@@ -102,65 +170,130 @@
             font-weight: 500;
             margin-top: 12px;
             transition: background 0.3s;
+            font-size: 1em;
         }
         .btn:hover {
-            background: #2980b9;
+            background: #d35400;
         }
+
+        /* Пустой результат */
         .empty {
             text-align: center;
             padding: 40px;
             color: #999;
             font-style: italic;
             font-size: 1.1em;
+            background: white;
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 800px;
         }
-        @media (max-width: 600px) {
+
+        /* Футер */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
             .search-box {
                 flex-direction: column;
             }
             .search-box button {
                 padding: 14px;
             }
+            .featured-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            .tour-card {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🌍 Найдите свой идеальный тур</h1>
+    <!-- Шапка сайта -->
+    <div class="header">
+        <h1>🌍 Найдите свой идеальный тур</h1>
+        <p>Бронируйте отели и туры прямо сейчас! Выгодно!</p>
+    </div>
 
-            <!-- Форма поиска -->
-            <form method="get" class="search-box">
-                <input
-                    type="text"
-                    name="q"
-                    placeholder="Поиск по названию или стране (например: Италия, Греция, Бали...)"
-                    value="{{ query }}"
-                >
-                <button type="submit">Найти</button>
-            </form>
-        </header>
+    <!-- Поисковая строка -->
+    <form method="get" class="search-box">
+        <input
+            type="text"
+            name="q"
+            placeholder="Поиск по названию или стране (например: Италия, Греция, Бали...)"
+            value="{{ query }}"
+        >
+        <button type="submit">Найти</button>
+    </form>
 
-        <!-- Результаты -->
-        <div class="tour-list">
-            {% for tour in tours %}
-            <div class="tour-card">
-                <h2>{{ tour.title }}</h2>
-                <p><strong>Страна:</strong> {{ tour.country }}</p>
-                <p><strong>Цена:</strong> {{ tour.price }} руб.</p>
-                <p><strong>Длительность:</strong> {{ tour.duration }} дней</p>
-                <p><strong>Дата начала:</strong> {{ tour.start_date }}</p>
-                <a href="{% url 'tour_detail' tour.id %}" class="btn">Подробнее</a>
+    <!-- Секция "Надо брать" (пример) -->
+    <div class="featured-section">
+        <h2>🔥 Надо брать</h2>
+        <div class="featured-grid">
+            <div class="featured-card">
+                <i class="fas fa-plane"></i>
+                <h3>Турция</h3>
+                <p>Отличные отели и цены</p>
             </div>
-            {% empty %}
-            <div class="empty">
-                {% if query %}
-                    Ничего не найдено по запросу «<strong>{{ query }}</strong>».
-                {% else %}
-                    Туры не найдены.
-                {% endif %}
+            <div class="featured-card">
+                <i class="fas fa-sun"></i>
+                <h3>Египет</h3>
+                <p>Пляжи и отдых</p>
             </div>
-            {% endfor %}
+            <div class="featured-card">
+                <i class="fas fa-mountain"></i>
+                <h3>Россия</h3>
+                <p>Краснодарский край</p>
+            </div>
+            <div class="featured-card">
+                <i class="fas fa-globe-europe"></i>
+                <h3>Европа</h3>
+                <p>Города и культура</p>
+            </div>
         </div>
+    </div>
+
+    <!-- Результаты поиска -->
+    <div class="tour-list">
+        {% for tour in tours %}
+        <div class="tour-card">
+            <h2>{{ tour.title }}</h2>
+            <p><strong>Страна:</strong> {{ tour.country }}</p>
+            <p><strong>Цена:</strong> {{ tour.price }} руб.</p>
+            <p><strong>Длительность:</strong> {{ tour.duration }} дней</p>
+            <p><strong>Дата начала:</strong> {{ tour.start_date }}</p>
+            <div class="price">Итого: {{ tour.price }} руб.</div>
+            <a href="{% url 'tour_detail' tour.id %}" class="btn">Подробнее</a>
+        </div>
+        {% empty %}
+        <div class="empty">
+            {% if query %}
+                Ничего не найдено по запросу «<strong>{{ query }}</strong>».
+            {% else %}
+                Туры не найдены.
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Футер -->
+    <div class="footer">
+        <p>&copy; 2025 Ваш Туроператор. Все права защищены.</p>
+        <p><a href="#">Политика конфиденциальности</a> | <a href="#">Условия использования</a></p>
     </div>
 </body>
 </html>

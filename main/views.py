@@ -1,7 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.contrib import messages # Импортируем для сообщений
 from .models import Client, Tour, Hotel, Transport, Booking, Payment
-from .forms import BookingForm, PaymentForm 
+from .forms import BookingForm, PaymentForm
 from django.db.models import Q
+
 
 # Главная страница: список всех туров
 
@@ -35,7 +39,7 @@ def create_booking(request, tour_id):
     tour = get_object_or_404(Tour, pk=tour_id)
 
     if request.method == 'POST':
-        form = BookingForm(request.POST)
+        form = BookingForm(request.POST, tour=tour) # или form = BookingForm(tour=tour) для GET
         if form.is_valid():
             booking = form.save(commit=False)
             booking.tour = tour
@@ -60,16 +64,23 @@ def booking_detail(request, booking_id):
 def create_payment(request, booking_id):
     booking = get_object_or_404(Booking, pk=booking_id)
 
+    # --- НОВАЯ ПРОВЕРКА С СООБЩЕНИЕМ ---
+    if booking.status == 'cancelled':
+        messages.error(request, f'Невозможно создать платёж: бронирование #{booking.id} отменено.')
+        return redirect('booking_detail', booking_id=booking.id)
+    # ------------------------------------
+
     if request.method == 'POST':
         form = PaymentForm(request.POST)
         if form.is_valid():
             payment = form.save(commit=False)
             payment.booking = booking
             payment.save()
+            messages.success(request, f'Платёж на сумму {payment.amount} руб. успешно обработан для бронирования #{booking.id}.')
             return redirect('booking_detail', booking_id=booking.id)
     else:
         form = PaymentForm()
-    
+
     return render(request, 'main/create_payment.html', {
         'form': form,
         'booking': booking
