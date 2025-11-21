@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.contrib import messages # Импортируем для сообщений
+from django.contrib import messages
 from .models import Client, Tour, Hotel, Transport, Booking, Payment
 from .forms import BookingForm, PaymentForm
 from django.db.models import Q
@@ -25,8 +25,8 @@ def home(request):
 # Страница отдельного тура
 def tour_detail(request, tour_id):
     tour = get_object_or_404(Tour, pk=tour_id)
-    hotels = Hotel.objects.filter(city=tour.country)  # Отели в стране тура
-    transports = Transport.objects.all()  # Можно фильтровать по маршруту
+    hotels = Hotel.objects.filter(city=tour.country)
+    transports = Transport.objects.all()
     return render(request, 'main/tour_detail.html', {
         'tour': tour,
         'hotels': hotels,
@@ -39,20 +39,19 @@ def create_booking(request, tour_id):
     tour = get_object_or_404(Tour, pk=tour_id)
 
     if request.method == 'POST':
-        form = BookingForm(request.POST, tour=tour) # или form = BookingForm(tour=tour) для GET
+        form = BookingForm(request.POST, tour=tour)
         if form.is_valid():
             booking = form.save(commit=False)
             booking.tour = tour
             booking.save()
             return redirect('booking_detail', booking_id=booking.id)
     else:
-        form = BookingForm()
-    
+        form = BookingForm(tour=tour) 
+
     return render(request, 'main/create_booking.html', {
         'form': form,
         'tour': tour
     })
-
 
 # Просмотр информации о бронировании
 def booking_detail(request, booking_id):

@@ -12,14 +12,9 @@ class BookingForm(forms.ModelForm):
         model = Booking
         fields = ['client', 'hotel', 'transport', 'status']
 
-    # НОВЫЙ КОД: Переопределяем __init__ для фильтрации отелей
     def __init__(self, *args, **kwargs):
-        # Извлекаем 'tour' из kwargs, если он есть, иначе None
         tour = kwargs.pop('tour', None)
-        # Вызываем родительский __init__ с оставшимися аргументами
         super().__init__(*args, **kwargs)
-
-        # Если tour был передан, фильтруем queryset для поля hotel
         if tour:
             self.fields['hotel'].queryset = Hotel.objects.filter(city=tour.country)
 

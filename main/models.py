@@ -38,6 +38,7 @@ class Transport(models.Model):
     departure = models.DateTimeField(verbose_name="Время отправления")
     arrival = models.DateTimeField(verbose_name="Время прибытия")
     route = models.CharField(max_length=200, verbose_name="Маршрут")
+    price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Цена транспорта", default=0.00)
 
     def __str__(self):
         return f"{self.type} - {self.company}"
@@ -60,7 +61,7 @@ class Booking(models.Model):
 
     def calculate_total_price(self):
       hotel_cost = self.hotel.price_per_night * self.tour.duration
-      transport_cost = self.transport.price  # Предполагается, что у Transport есть поле price
+      transport_cost = self.transport.price  
       return self.tour.price + hotel_cost + transport_cost
 
     def save(self, *args, **kwargs):
