@@ -21,7 +21,6 @@
             line-height: 1.6;
         }
 
-        /* Шапка сайта */
         .header {
             background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
             color: white;
@@ -61,7 +60,7 @@
             border-color: #007bff;
         }
         .search-box button {
-            background: #e67e22; /* Оранжевый цвет кнопки, как на Coral.ru */
+            background: #4384e7; /* Оранжевый цвет кнопки, как на Coral.ru */
             color: white;
             border: none;
             padding: 14px 25px;
@@ -72,13 +71,13 @@
             transition: background 0.3s;
         }
         .search-box button:hover {
-            background: #d35400;
+            background: #89a3ec;
         }
 
         /* Секция "Надо брать" (можно добавить подобную секцию) */
         .featured-section {
             padding: 40px 20px;
-            background-color: white;
+            background-color: rgb(255, 255, 255);
             margin: 20px auto;
             max-width: 1200px;
             border-radius: 12px;
@@ -132,7 +131,7 @@
             margin: 0 auto;
         }
         .tour-card {
-            background: white;
+            background: #ffffff;
             border: 1px solid #ddd;
             border-radius: 12px;
             padding: 25px;
@@ -144,7 +143,7 @@
             box-shadow: 0 6px 24px rgba(0,0,0,0.1);
         }
         .tour-card h2 {
-            color: #0056b3;
+            color: #000000;
             margin-bottom: 12px;
             font-size: 1.6em;
             font-weight: 600;
@@ -156,12 +155,12 @@
         .tour-card .price {
             font-size: 1.3em;
             font-weight: 700;
-            color: #e67e22;
+            color: #4384e7;
             margin: 10px 0;
         }
         .btn {
             display: inline-block;
-            background: #e67e22;
+            background:#4384e7;
             color: white;
             padding: 10px 20px;
             text-decoration: none;
@@ -172,7 +171,7 @@
             font-size: 1em;
         }
         .btn:hover {
-            background: #d35400;
+            background: #89a3ec;
         }
 
         /* Пустой результат */
@@ -224,7 +223,7 @@
 <body>
     <!-- Шапка сайта -->
     <div class="header">
-        <h1>Alma</h1>
+        <h1>Coraltravel</h1>
         <h2>🌍 Найдите свой идеальный тур</h2>
         <p>Бронируйте отели и туры прямо сейчас! Выгодно!</p>
     </div>
@@ -237,7 +236,7 @@
             placeholder="Поиск по названию или стране (например: Италия, Греция, Бали...)"
             value="{{ query }}"
         >
-        <button type="submit">Найти</button>
+        <button type="submit">Поиск</button>
     </form>
 
     <!-- Секция "Надо брать" (пример) -->

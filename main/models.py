@@ -13,7 +13,7 @@ class Client(models.Model):
 
 class Tour(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название тура")
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
+    price = models.CharField(verbose_name="Цена")
     duration = models.IntegerField(verbose_name="Длительность (дней)")
     country = models.CharField(max_length=100, verbose_name="Страна")
     start_date = models.DateField(verbose_name="Дата начала")
