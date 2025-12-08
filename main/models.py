@@ -10,17 +10,15 @@ class Client(models.Model):
     def __str__(self):
         return self.name
 
-
 class Tour(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название тура")
-    price = models.CharField(verbose_name="Цена")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена", default=0.00)
     duration = models.IntegerField(verbose_name="Длительность (дней)")
     country = models.CharField(max_length=100, verbose_name="Страна")
     start_date = models.DateField(verbose_name="Дата начала")
 
     def __str__(self):
         return self.title
-
 
 class Hotel(models.Model):
     name = models.CharField(max_length=200, verbose_name="Название отеля")
@@ -30,7 +28,6 @@ class Hotel(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.city})"
-
 
 class Transport(models.Model):
     type = models.CharField(max_length=100, verbose_name="Тип транспорта")
@@ -42,7 +39,6 @@ class Transport(models.Model):
 
     def __str__(self):
         return f"{self.type} - {self.company}"
-
 
 class Booking(models.Model):
     STATUS_CHOICES = [
