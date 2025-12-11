@@ -58,7 +58,7 @@
             border-color: #007bff;
         }
         .search-box button {
-            background: #4384e7; /* Оранжевый цвет кнопки, как на Coral.ru */
+            background: #4384e7;
             color: white;
             border: none;
             padding: 14px 25px;
@@ -72,7 +72,6 @@
             background: #89a3ec;
         }
 
-        /* Секция "Надо брать" (можно добавить подобную секцию) */
         .featured-section {
             padding: 40px 20px;
             background-color: rgb(255, 255, 255);
@@ -185,7 +184,6 @@
             max-width: 800px;
         }
 
-        /* Футер */
         .footer {
             background: #333;
             color: white;
@@ -201,7 +199,6 @@
             text-decoration: underline;
         }
 
-        /* Адаптивность */
         @media (max-width: 768px) {
             .search-box {
                 flex-direction: column;
@@ -219,14 +216,12 @@
     </style>
 </head>
 <body>
-    <!-- Шапка сайта -->
     <div class="header">
         <h1>Coraltravel</h1>
         <h2>🌍 Найдите свой идеальный тур</h2>
         <p>Бронируйте отели и туры прямо сейчас! Выгодно!</p>
     </div>
 
-    <!-- Поисковая строка -->
     <form method="get" class="search-box">
         <input
             type="text"
@@ -237,7 +232,6 @@
         <button type="submit">Поиск</button>
     </form>
 
-    <!-- Секция "Надо брать" -->
     <div class="featured-section">
         <h2>🔥 Надо брать</h2>
         <div class="featured-grid">
@@ -287,7 +281,6 @@
         {% endfor %}
     </div>
 
-    <!-- Футер -->
     <div class="footer">
         <p>&copy; 2025 Ваш Туроператор. Все права защищены.</p>
         <p><a href="#">Политика конфиденциальности</a> | <a href="#">Условия использования</a></p>

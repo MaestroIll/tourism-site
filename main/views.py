@@ -63,11 +63,9 @@ def booking_detail(request, booking_id):
 def create_payment(request, booking_id):
     booking = get_object_or_404(Booking, pk=booking_id)
 
-    # --- НОВАЯ ПРОВЕРКА С СООБЩЕНИЕМ ---
     if booking.status == 'cancelled':
         messages.error(request, f'Невозможно создать платёж: бронирование #{booking.id} отменено.')
         return redirect('booking_detail', booking_id=booking.id)
-    # ------------------------------------
 
     if request.method == 'POST':
         form = PaymentForm(request.POST)
