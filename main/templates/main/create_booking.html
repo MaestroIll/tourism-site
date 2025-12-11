@@ -3,7 +3,6 @@
 {% block title %}Бронирование {{ tour.title }} | Coral Travel{% endblock %}
 
 {% block content %}
-<!-- Search Box -->
 <div class="search-box" style="margin-bottom: 20px;">
     <form method="get" action="{% url 'home' %}" class="search-form">
         <input 
@@ -35,7 +34,6 @@
         {% csrf_token %}
         
         <div class="grid grid-2" style="gap: 25px; margin-bottom: 30px;">
-            <!-- Client Selection -->
             <div class="form-group">
                 <label class="form-label">
                     <i class="fas fa-user"></i> Выберите клиента
@@ -53,7 +51,6 @@
                 {% endif %}
             </div>
             
-            <!-- Hotel Selection -->
             <div class="form-group">
                 <label class="form-label">
                     <i class="fas fa-bed"></i> Выберите отель
@@ -73,7 +70,6 @@
                 {% endif %}
             </div>
             
-            <!-- Transport Selection -->
             <div class="form-group">
                 <label class="form-label">
                     <i class="fas fa-plane"></i> Выберите транспорт
@@ -93,7 +89,6 @@
                 {% endif %}
             </div>
             
-            <!-- Status Selection -->
             <div class="form-group">
                 <label class="form-label">
                     <i class="fas fa-info-circle"></i> Статус бронирования
@@ -106,7 +101,6 @@
             </div>
         </div>
         
-        <!-- Summary -->
         <div style="background: var(--coral-light-blue); padding: 20px; border-radius: 10px; margin-bottom: 30px;">
             <h3 style="font-family: 'Montserrat', sans-serif; color: var(--coral-dark); margin-bottom: 15px;">
                 <i class="fas fa-clipboard-check"></i> Сводка по бронированию
@@ -127,7 +121,6 @@
             </div>
         </div>
         
-        <!-- Submit Buttons -->
         <div style="display: flex; gap: 15px; justify-content: center;">
             <button type="submit" class="btn btn-primary" style="padding: 16px 40px;">
                 <i class="fas fa-check-circle"></i> Подтвердить бронирование

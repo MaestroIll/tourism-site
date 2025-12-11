@@ -3,13 +3,11 @@
 {% block title %}Coral Travel | Туры и путевки по всему миру{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
 <section class="hero">
     <h1 class="hero-title">Найди свой идеальный тур</h1>
     <p class="hero-subtitle">Более 5000 туров в 50 странах мира. Лучшие цены от проверенного туроператора</p>
 </section>
 
-<!-- Search Box -->
 <div class="search-box">
     <h2 class="search-title">
         <i class="fas fa-search"></i> Поиск туров
@@ -34,7 +32,6 @@
     {% endif %}
 </div>
 
-<!-- Special Offers -->
 {% if tours and not query %}
 <div class="card">
     <h2 class="card-title">
@@ -66,7 +63,6 @@
 </div>
 {% endif %}
 
-<!-- All Tours -->
 <div class="card">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
         <h2 class="card-title" style="margin: 0;">
@@ -105,6 +101,19 @@
             </div>
             {% endfor %}
         </div>
+        
+        <div class="card" style="text-align: center; padding: 30px; margin-top: 30px;">
+            <h3 style="font-family: 'Montserrat', sans-serif; color: var(--coral-dark); margin-bottom: 20px;">
+                Хотите увидеть больше вариантов?
+            </h3>
+            <p style="color: var(--coral-text); margin-bottom: 25px;">
+                В нашей коллекции более {{ tours|length }} туров по всему миру
+            </p>
+            <a href="{% url 'tours_page' %}" class="btn btn-primary" style="padding: 15px 40px;">
+                <i class="fas fa-globe"></i> Посмотреть все туры
+            </a>
+        </div>
+        
     {% else %}
         <div style="text-align: center; padding: 50px 20px;">
             <i class="fas fa-search" style="font-size: 64px; color: var(--coral-border); margin-bottom: 20px;"></i>
@@ -133,7 +142,6 @@
     {% endif %}
 </div>
 
-<!-- Advantages -->
 <div class="grid grid-4">
     <div class="card" style="text-align: center; padding: 25px 20px;">
         <i class="fas fa-shield-alt" style="font-size: 40px; color: var(--coral-green); margin-bottom: 15px;"></i>

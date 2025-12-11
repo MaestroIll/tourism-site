@@ -8,7 +8,6 @@ from django.db.models import Q
 
 
 # Главная страница: список всех туров
-
 def home(request):
     query = request.GET.get('q', '').strip()
     if query:
@@ -20,6 +19,102 @@ def home(request):
     else:
         tours = Tour.objects.all()
     return render(request, 'main/home.html', {'tours': tours, 'query': query})
+
+
+# Страница со всеми турами
+def tours_page(request):
+    """Страница со всеми турами"""
+    query = request.GET.get('q', '').strip()
+    country_filter = request.GET.get('country', '')
+    sort_by = request.GET.get('sort', 'start_date')
+    
+    tours = Tour.objects.all()
+    
+    # Фильтрация по поиску
+    if query:
+        tours = tours.filter(
+            Q(title__icontains=query) |
+            Q(country__icontains=query)
+        )
+    
+    # Фильтрация по стране
+    if country_filter:
+        tours = tours.filter(country__icontains=country_filter)
+    
+    # Сортировка
+    if sort_by == 'price_asc':
+        tours = tours.order_by('price')
+    elif sort_by == 'price_desc':
+        tours = tours.order_by('-price')
+    elif sort_by == 'duration':
+        tours = tours.order_by('-duration')
+    elif sort_by == 'date':
+        tours = tours.order_by('start_date')
+    else:
+        tours = tours.order_by('start_date')
+    
+    # Получаем список уникальных стран для фильтра
+    countries = Tour.objects.values_list('country', flat=True).distinct().order_by('country')
+    
+    return render(request, 'main/tours_page.html', {
+        'tours': tours,
+        'query': query,
+        'countries': countries,
+        'selected_country': country_filter,
+        'sort_by': sort_by,
+    })
+
+
+# Страница со всеми отелями
+def hotels_page(request):
+    """Страница со всеми отелями"""
+    query = request.GET.get('q', '').strip()
+    city_filter = request.GET.get('city', '')
+    stars_filter = request.GET.get('stars', '')
+    sort_by = request.GET.get('sort', 'name')
+    
+    hotels = Hotel.objects.all()
+    
+    # Фильтрация по поиску
+    if query:
+        hotels = hotels.filter(
+            Q(name__icontains=query) |
+            Q(city__icontains=query)
+        )
+    
+    # Фильтрация по городу
+    if city_filter:
+        hotels = hotels.filter(city__icontains=city_filter)
+    
+    # Фильтрация по звездам
+    if stars_filter and stars_filter != 'all':
+        hotels = hotels.filter(stars=stars_filter)
+    
+    # Сортировка
+    if sort_by == 'price_asc':
+        hotels = hotels.order_by('price_per_night')
+    elif sort_by == 'price_desc':
+        hotels = hotels.order_by('-price_per_night')
+    elif sort_by == 'stars':
+        hotels = hotels.order_by('-stars', 'name')
+    elif sort_by == 'name':
+        hotels = hotels.order_by('name')
+    else:
+        hotels = hotels.order_by('name')
+    
+    # Получаем списки для фильтров
+    cities = Hotel.objects.values_list('city', flat=True).distinct().order_by('city')
+    stars_choices = [1, 2, 3, 4, 5]
+    
+    return render(request, 'main/hotels_page.html', {
+        'hotels': hotels,
+        'query': query,
+        'cities': cities,
+        'stars_choices': stars_choices,
+        'selected_city': city_filter,
+        'selected_stars': stars_filter,
+        'sort_by': sort_by,
+    })
 
 
 # Страница отдельного тура

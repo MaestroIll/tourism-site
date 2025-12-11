@@ -3,7 +3,6 @@
 {% block title %}Оплата бронирования #{{ booking.id }} | Coral Travel{% endblock %}
 
 {% block content %}
-<!-- Search Box -->
 <div class="search-box" style="margin-bottom: 20px;">
     <form method="get" action="{% url 'home' %}" class="search-form">
         <input 
@@ -28,7 +27,6 @@
         </div>
     </div>
     
-    <!-- Booking Info -->
     <div style="background: var(--coral-light-blue); padding: 25px; border-radius: 10px; margin-bottom: 30px;">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
             <div>
@@ -48,7 +46,6 @@
         </div>
     </div>
     
-    <!-- Payment Amount -->
     <div style="text-align: center; margin: 30px 0;">
         <div style="font-size: 14px; color: var(--coral-text); margin-bottom: 10px;">
             Сумма к оплате
@@ -58,7 +55,6 @@
         </div>
     </div>
     
-    <!-- Payment Form -->
     <form method="post" class="payment-form" style="max-width: 500px; margin: 0 auto;">
         {% csrf_token %}
         
@@ -130,7 +126,6 @@
             {% endif %}
         </div>
         
-        <!-- Submit Buttons -->
         <div style="display: flex; gap: 15px; justify-content: center; margin-top: 40px;">
             <button type="submit" class="btn btn-primary" style="padding: 16px 40px;">
                 <i class="fas fa-check"></i> Подтвердить оплату
@@ -141,7 +136,6 @@
         </div>
     </form>
     
-    <!-- Security Info -->
     <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--coral-border); text-align: center;">
         <div style="display: inline-flex; align-items: center; gap: 10px; color: var(--coral-green);">
             <i class="fas fa-shield-alt"></i>
@@ -157,24 +151,20 @@
         
         paymentOptions.forEach((option, index) => {
             option.addEventListener('click', function() {
-                // Remove active class from all options
                 paymentOptions.forEach(opt => {
                     opt.style.borderColor = 'var(--coral-border)';
                     opt.style.background = 'white';
                     opt.style.boxShadow = 'none';
                 });
                 
-                // Add active class to clicked option
                 this.style.borderColor = 'var(--coral-red)';
                 this.style.background = 'var(--coral-light-blue)';
                 this.style.boxShadow = '0 4px 12px rgba(255, 46, 93, 0.1)';
                 
-                // Check corresponding radio input
                 paymentInputs[index].checked = true;
             });
         });
         
-        // Initialize first option as selected
         if (paymentOptions.length > 0) {
             paymentOptions[0].style.borderColor = 'var(--coral-red)';
             paymentOptions[0].style.background = 'var(--coral-light-blue)';

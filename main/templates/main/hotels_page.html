@@ -1,0 +1,322 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Все отели | Coral Travel{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1 class="hero-title">Все отели</h1>
+    <p class="hero-subtitle">Выберите идеальное место для отдыха из нашей коллекции отелей</p>
+</section>
+
+<div class="card">
+    <div class="grid grid-2" style="gap: 30px;">
+        <div>
+            <h3 class="search-title">
+                <i class="fas fa-search"></i> Поиск отелей
+            </h3>
+            <form method="get" class="search-form">
+                <input 
+                    type="text" 
+                    name="q" 
+                    value="{{ query }}" 
+                    placeholder="Поиск по названию или городу..."
+                    class="search-input"
+                >
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search"></i> Найти
+                </button>
+            </form>
+        </div>
+        
+        <div>
+            <h3 class="search-title">
+                <i class="fas fa-filter"></i> Фильтры
+            </h3>
+            <form method="get" class="filter-form">
+                <input type="hidden" name="q" value="{{ query }}">
+                <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+                    <select name="city" class="form-control" style="flex: 1;" onchange="this.form.submit()">
+                        <option value="">Все города</option>
+                        {% for city in cities %}
+                            <option value="{{ city }}" {% if selected_city == city %}selected{% endif %}>
+                                {{ city }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    
+                    <select name="stars" class="form-control" style="flex: 1;" onchange="this.form.submit()">
+                        <option value="all">Все звезды</option>
+                        {% for stars in stars_choices %}
+                            <option value="{{ stars }}" {% if selected_stars == stars|stringformat:"i" %}selected{% endif %}>
+                                {{ stars }} звезд
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div>
+                    <select name="sort" class="form-control" onchange="this.form.submit()">
+                        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>По названию (А-Я)</option>
+                        <option value="stars" {% if sort_by == 'stars' %}selected{% endif %}>По звездам (5→1)</option>
+                        <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Цена (по возрастанию)</option>
+                        <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Цена (по убыванию)</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    {% if query or selected_city or selected_stars %}
+    <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+        {% if query %}
+        <span style="background: var(--coral-light-blue); padding: 8px 15px; border-radius: 20px; font-size: 14px;">
+            Поиск: "{{ query }}"
+            <a href="?{% if selected_city %}city={{ selected_city }}&{% endif %}{% if selected_stars %}stars={{ selected_stars }}&{% endif %}sort={{ sort_by }}" 
+               style="margin-left: 8px; color: var(--coral-red); text-decoration: none;">
+                <i class="fas fa-times"></i>
+            </a>
+        </span>
+        {% endif %}
+        
+        {% if selected_city %}
+        <span style="background: var(--coral-light-blue); padding: 8px 15px; border-radius: 20px; font-size: 14px;">
+            Город: {{ selected_city }}
+            <a href="?{% if query %}q={{ query }}&{% endif %}{% if selected_stars %}stars={{ selected_stars }}&{% endif %}sort={{ sort_by }}" 
+               style="margin-left: 8px; color: var(--coral-red); text-decoration: none;">
+                <i class="fas fa-times"></i>
+            </a>
+        </span>
+        {% endif %}
+        
+        {% if selected_stars and selected_stars != 'all' %}
+        <span style="background: var(--coral-light-blue); padding: 8px 15px; border-radius: 20px; font-size: 14px;">
+            Категория: {{ selected_stars }}★
+            <a href="?{% if query %}q={{ query }}&{% endif %}{% if selected_city %}city={{ selected_city }}&{% endif %}sort={{ sort_by }}" 
+               style="margin-left: 8px; color: var(--coral-red); text-decoration: none;">
+                <i class="fas fa-times"></i>
+            </a>
+        </span>
+        {% endif %}
+        
+        <a href="{% url 'hotels_page' %}" style="margin-left: auto; font-size: 14px; color: var(--coral-blue); text-decoration: none; display: flex; align-items: center; gap: 5px;">
+            <i class="fas fa-times"></i> Сбросить все фильтры
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card" style="text-align: center; padding: 20px; margin-bottom: 20px;">
+    <div style="display: inline-flex; align-items: center; gap: 10px; background: var(--coral-light-blue); padding: 10px 25px; border-radius: 30px;">
+        <i class="fas fa-hotel" style="color: var(--coral-orange);"></i>
+        <span style="font-weight: 600; color: var(--coral-dark);">
+            Найдено отелей: <span style="color: var(--coral-red);">{{ hotels|length }}</span>
+        </span>
+    </div>
+</div>
+
+{% if hotels %}
+    <div class="grid grid-3">
+        {% for hotel in hotels %}
+        <div class="hotel-card" style="background: white; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); transition: all 0.3s; border: 1px solid var(--coral-border);">
+            <div class="hotel-header" style="position: relative; height: 200px; background: linear-gradient(135deg, 
+                {% if hotel.stars >= 5 %}var(--coral-orange){% elif hotel.stars >= 4 %}var(--coral-red){% else %}var(--coral-blue){% endif %}, 
+                {% if hotel.stars >= 5 %}#CC6200{% elif hotel.stars >= 4 %}#CC2452{% else %}#003366{% endif %}); 
+                color: white; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+                <span class="hotel-stars" style="background: rgba(255, 255, 255, 0.9); color: var(--coral-dark); padding: 5px 15px; border-radius: 20px; font-weight: 600; font-size: 14px; align-self: flex-start;">
+                    {% with ''|center:hotel.stars as range %}
+                    {% for _ in range %}★{% endfor %}
+                    {% endwith %}
+                    {{ hotel.stars }}-звездочный
+                </span>
+                <div class="hotel-price" style="background: var(--coral-red); padding: 10px 20px; border-radius: 5px; font-size: 20px; font-weight: 700; align-self: flex-end;">
+                    {{ hotel.price_per_night }} ₽
+                    <div style="font-size: 12px; opacity: 0.9;">за ночь</div>
+                </div>
+                <div style="position: absolute; bottom: 20px; left: 20px; color: white; font-size: 14px; opacity: 0.9; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-map-marker-alt"></i> {{ hotel.city }}
+                </div>
+            </div>
+            <div class="hotel-content" style="padding: 20px;">
+                <h3 class="hotel-title" style="font-family: 'Montserrat', sans-serif; font-size: 20px; color: var(--coral-dark); margin-bottom: 15px; line-height: 1.4;">
+                    {{ hotel.name }}
+                </h3>
+                
+                <div class="hotel-details" style="display: flex; justify-content: space-between; color: var(--coral-text); font-size: 14px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--coral-border);">
+                    <span style="display: flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-city"></i> {{ hotel.city }}
+                    </span>
+                    <span style="display: flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-star" style="color: var(--coral-orange);"></i> {{ hotel.stars }}★
+                    </span>
+                </div>
+                
+                <div style="margin: 15px 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span style="color: var(--coral-text); font-size: 14px;">Категория:</span>
+                        <span style="font-weight: 600; color: var(--coral-dark);">
+                            {% with ''|center:hotel.stars as range %}
+                            {% for _ in range %}★{% endfor %}
+                            {% endwith %}
+                            {{ hotel.stars }}-звездочный
+                        </span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--coral-text); font-size: 14px;">Цена за ночь:</span>
+                        <span style="font-weight: 600; color: var(--coral-red);">{{ hotel.price_per_night }} ₽</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <div style="background: var(--coral-gray); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <div style="display: flex; align-items: center; gap: 10px; color: var(--coral-dark); font-size: 14px;">
+                            <i class="fas fa-check-circle" style="color: var(--coral-green);"></i>
+                            <span>Бесплатная отмена • Бесплатный Wi-Fi • Завтрак включен</span>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'tours_page' %}" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-calendar-check"></i> Выбрать тур с этим отелем
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card" style="text-align: center; padding: 60px 40px;">
+        <i class="fas fa-search" style="font-size: 64px; color: var(--coral-border); margin-bottom: 20px;"></i>
+        <h3 style="font-family: 'Montserrat', sans-serif; color: var(--coral-dark); margin-bottom: 15px;">
+            Отели не найдены
+        </h3>
+        <p style="color: var(--coral-text); margin-bottom: 30px; max-width: 500px; margin: 0 auto 30px;">
+            {% if query or selected_city or selected_stars %}
+                По выбранным фильтрам отели не найдены.<br>
+                Попробуйте изменить параметры поиска или сбросить фильтры.
+            {% else %}
+                В данный момент в системе нет доступных отелей.<br>
+                Обратитесь к администратору для добавления новых отелей.
+            {% endif %}
+        </p>
+        <a href="{% url 'hotels_page' %}" class="btn btn-outline">
+            <i class="fas fa-redo"></i> Сбросить фильтры
+        </a>
+    </div>
+{% endif %}
+
+<div class="card">
+    <h2 class="card-title">
+        <i class="fas fa-map-marked-alt"></i> Популярные города
+    </h2>
+    <div class="grid grid-4">
+        {% for city in cities|slice:":8" %}
+        <a href="?city={{ city|urlencode }}" 
+           class="city-card" 
+           style="display: block; text-decoration: none; color: inherit;">
+            <div style="text-align: center; padding: 25px 15px; border: 2px solid var(--coral-border); border-radius: 10px; transition: all 0.3s; background: linear-gradient(135deg, rgba(255, 122, 0, 0.1), rgba(255, 255, 255, 0.5));"
+                 onmouseover="this.style.borderColor='var(--coral-orange)'; this.style.transform='translateY(-5px)';"
+                 onmouseout="this.style.borderColor='var(--coral-border)'; this.style.transform='translateY(0)';">
+                <i class="fas fa-city" style="font-size: 32px; color: var(--coral-orange); margin-bottom: 15px;"></i>
+                <h4 style="font-family: 'Montserrat', sans-serif; color: var(--coral-dark);">
+                    {{ city }}
+                </h4>
+                <span style="color: var(--coral-text); font-size: 14px;">
+                    Отели в {{ city }}
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card">
+    <h2 class="card-title">
+        <i class="fas fa-star"></i> Категории отелей
+    </h2>
+    <div class="grid grid-5">
+        {% for stars in stars_choices %}
+        <a href="?stars={{ stars }}" 
+           class="stars-card" 
+           style="display: block; text-decoration: none; color: inherit;">
+            <div style="text-align: center; padding: 25px 15px; border: 2px solid var(--coral-border); border-radius: 10px; transition: all 0.3s;"
+                 onmouseover="this.style.borderColor='var(--coral-orange)'; this.style.transform='translateY(-5px)';"
+                 onmouseout="this.style.borderColor='var(--coral-border)'; this.style.transform='translateY(0)';">
+                <div style="font-size: 28px; color: {% if stars >= 4 %}var(--coral-orange){% elif stars >= 3 %}var(--coral-red){% else %}var(--coral-blue){% endif %}; margin-bottom: 10px;">
+                    {% with ''|center:stars as range %}
+                    {% for _ in range %}★{% endfor %}
+                    {% endwith %}
+                </div>
+                <h4 style="font-family: 'Montserrat', sans-serif; color: var(--coral-dark); font-size: 16px;">
+                    {{ stars }} звезд
+                </h4>
+                <span style="color: var(--coral-text); font-size: 12px;">
+                    {{ stars }}-звездочные отели
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="grid grid-4">
+    <div class="card" style="text-align: center; padding: 25px 20px;">
+        <div style="width: 60px; height: 60px; background: var(--coral-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-star" style="color: white; font-size: 24px;"></i>
+        </div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--coral-dark); margin-bottom: 10px;">
+            Проверенные отели
+        </h3>
+        <p style="font-size: 14px; color: var(--coral-text);">
+            Все отели лично проверены нашими экспертами
+        </p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 25px 20px;">
+        <div style="width: 60px; height: 60px; background: var(--coral-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-utensils" style="color: white; font-size: 24px;"></i>
+        </div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--coral-dark); margin-bottom: 10px;">
+            Питание
+        </h3>
+        <p style="font-size: 14px; color: var(--coral-text);">
+            Различные варианты питания от завтрака до "все включено"
+        </p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 25px 20px;">
+        <div style="width: 60px; height: 60px; background: var(--coral-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-swimming-pool" style="color: white; font-size: 24px;"></i>
+        </div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--coral-dark); margin-bottom: 10px;">
+            Инфраструктура
+        </h3>
+        <p style="font-size: 14px; color: var(--coral-text);">
+            Бассейны, SPA, рестораны и развлечения
+        </p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 25px 20px;">
+        <div style="width: 60px; height: 60px; background: var(--coral-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-wifi" style="color: white; font-size: 24px;"></i>
+        </div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--coral-dark); margin-bottom: 10px;">
+            Удобства
+        </h3>
+        <p style="font-size: 14px; color: var(--coral-text);">
+            Wi-Fi, кондиционер, сейф и другие удобства
+        </p>
+    </div>
+</div>
+
+<style>
+    .grid-5 {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+    }
+    
+    /* Hotel card hover effects */
+    .hotel-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-hover);
+    }
+</style>
+{% endblock %}

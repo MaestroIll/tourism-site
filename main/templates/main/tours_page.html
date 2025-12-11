@@ -1,0 +1,248 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Все туры | Coral Travel{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1 class="hero-title">Все туры</h1>
+    <p class="hero-subtitle">Выберите свой идеальный отдых из нашей обширной коллекции</p>
+</section>
+
+<div class="card">
+    <div class="grid grid-2" style="gap: 30px;">
+        <div>
+            <h3 class="search-title">
+                <i class="fas fa-search"></i> Поиск туров
+            </h3>
+            <form method="get" class="search-form">
+                <input 
+                    type="text" 
+                    name="q" 
+                    value="{{ query }}" 
+                    placeholder="Поиск по названию или стране..."
+                    class="search-input"
+                >
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search"></i> Найти
+                </button>
+            </form>
+        </div>
+        
+        <div>
+            <h3 class="search-title">
+                <i class="fas fa-filter"></i> Фильтры
+            </h3>
+            <form method="get" class="filter-form">
+                <input type="hidden" name="q" value="{{ query }}">
+                <div style="display: flex; gap: 15px;">
+                    <select name="country" class="form-control" style="flex: 1;" onchange="this.form.submit()">
+                        <option value="">Все страны</option>
+                        {% for country in countries %}
+                            <option value="{{ country }}" {% if selected_country == country %}selected{% endif %}>
+                                {{ country }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    
+                    <select name="sort" class="form-control" style="flex: 1;" onchange="this.form.submit()">
+                        <option value="date" {% if sort_by == 'date' %}selected{% endif %}>По дате</option>
+                        <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Цена (по возрастанию)</option>
+                        <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Цена (по убыванию)</option>
+                        <option value="duration" {% if sort_by == 'duration' %}selected{% endif %}>По длительности</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    {% if query or selected_country %}
+    <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+        {% if query %}
+        <span style="background: var(--coral-light-blue); padding: 8px 15px; border-radius: 20px; font-size: 14px;">
+            Поиск: "{{ query }}"
+            <a href="?{% if selected_country %}country={{ selected_country }}&{% endif %}sort={{ sort_by }}" style="margin-left: 8px; color: var(--coral-red); text-decoration: none;">
+                <i class="fas fa-times"></i>
+            </a>
+        </span>
+        {% endif %}
+        
+        {% if selected_country %}
+        <span style="background: var(--coral-light-blue); padding: 8px 15px; border-radius: 20px; font-size: 14px;">
+            Страна: {{ selected_country }}
+            <a href="?{% if query %}q={{ query }}&{% endif %}sort={{ sort_by }}" style="margin-left: 8px; color: var(--coral-red); text-decoration: none;">
+                <i class="fas fa-times"></i>
+            </a>
+        </span>
+        {% endif %}
+        
+        <a href="{% url 'tours_page' %}" style="margin-left: auto; font-size: 14px; color: var(--coral-blue); text-decoration: none; display: flex; align-items: center; gap: 5px;">
+            <i class="fas fa-times"></i> Сбросить все фильтры
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card" style="text-align: center; padding: 20px; margin-bottom: 20px;">
+    <div style="display: inline-flex; align-items: center; gap: 10px; background: var(--coral-light-blue); padding: 10px 25px; border-radius: 30px;">
+        <i class="fas fa-plane" style="color: var(--coral-blue);"></i>
+        <span style="font-weight: 600; color: var(--coral-dark);">
+            Найдено туров: <span style="color: var(--coral-red);">{{ tours|length }}</span>
+        </span>
+    </div>
+</div>
+
+{% if tours %}
+    <div class="grid grid-3">
+        {% for tour in tours %}
+        <div class="tour-card">
+            <div class="tour-header" style="background: linear-gradient(135deg, 
+                {% cycle '#0066CC' '#FF2E5D' '#00A859' '#FF7A00' as colors %}, 
+                {% cycle '#003366' '#CC2452' '#008744' '#CC6200' %})">
+                <span class="tour-country">
+                    <i class="fas fa-map-marker-alt"></i> {{ tour.country }}
+                </span>
+                <div class="tour-price">{{ tour.price }} ₽</div>
+                <div style="position: absolute; bottom: 20px; left: 20px; color: white; font-size: 12px; opacity: 0.9;">
+                    {{ tour.start_date }}
+                </div>
+            </div>
+            <div class="tour-content">
+                <h3 class="tour-title">{{ tour.title }}</h3>
+                <div class="tour-details">
+                    <span><i class="fas fa-calendar-alt"></i> {{ tour.duration }} дней</span>
+                    <span><i class="fas fa-clock"></i> {{ tour.start_date|date:"d.m.Y" }}</span>
+                </div>
+                
+                <div style="margin: 15px 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span style="color: var(--coral-text); font-size: 14px;">Дата начала:</span>
+                        <span style="font-weight: 600; color: var(--coral-dark);">{{ tour.start_date }}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--coral-text); font-size: 14px;">Длительность:</span>
+                        <span style="font-weight: 600; color: var(--coral-dark);">{{ tour.duration }} дней</span>
+                    </div>
+                </div>
+                
+                <a href="{% url 'tour_detail' tour.id %}" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-eye"></i> Подробнее о туре
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card" style="text-align: center; padding: 60px 40px;">
+        <i class="fas fa-search" style="font-size: 64px; color: var(--coral-border); margin-bottom: 20px;"></i>
+        <h3 style="font-family: 'Montserrat', sans-serif; color: var(--coral-dark); margin-bottom: 15px;">
+            Туры не найдены
+        </h3>
+        <p style="color: var(--coral-text); margin-bottom: 30px; max-width: 500px; margin: 0 auto 30px;">
+            {% if query or selected_country %}
+                По выбранным фильтрам туры не найдены.<br>
+                Попробуйте изменить параметры поиска или сбросить фильтры.
+            {% else %}
+                В данный момент в системе нет доступных туров.<br>
+                Обратитесь к администратору для добавления новых предложений.
+            {% endif %}
+        </p>
+        <a href="{% url 'tours_page' %}" class="btn btn-outline">
+            <i class="fas fa-redo"></i> Сбросить фильтры
+        </a>
+    </div>
+{% endif %}
+
+{% if tours|length > 12 %}
+<div class="card" style="text-align: center; padding: 20px;">
+    <div style="display: inline-flex; gap: 10px;">
+        <button class="btn btn-outline" style="padding: 10px 20px;">
+            <i class="fas fa-chevron-left"></i> Назад
+        </button>
+        <span style="display: inline-flex; gap: 5px;">
+            <button class="btn" style="padding: 10px 15px; background: var(--coral-red); color: white;">1</button>
+            <button class="btn btn-outline" style="padding: 10px 15px;">2</button>
+            <button class="btn btn-outline" style="padding: 10px 15px;">3</button>
+            <span style="padding: 10px 5px;">...</span>
+        </span>
+        <button class="btn btn-outline" style="padding: 10px 20px;">
+            Вперед <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+</div>
+{% endif %}
+
+<div class="card">
+    <h2 class="card-title">
+        <i class="fas fa-globe-americas"></i> Популярные направления
+    </h2>
+    <div class="grid grid-4">
+        {% for country in countries|slice:":8" %}
+        <a href="?country={{ country|urlencode }}" 
+           class="category-card" 
+           style="display: block; text-decoration: none; color: inherit;">
+            <div style="text-align: center; padding: 25px 15px; border: 2px solid var(--coral-border); border-radius: 10px; transition: all 0.3s;"
+                 onmouseover="this.style.borderColor='var(--coral-red)'; this.style.transform='translateY(-5px)';"
+                 onmouseout="this.style.borderColor='var(--coral-border)'; this.style.transform='translateY(0)';">
+                <i class="fas fa-flag" style="font-size: 32px; color: var(--coral-blue); margin-bottom: 15px;"></i>
+                <h4 style="font-family: 'Montserrat', sans-serif; color: var(--coral-dark);">
+                    {{ country }}
+                </h4>
+                <span style="color: var(--coral-text); font-size: 14px;">
+                    {{ tour.country|default:"Туры" }}
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="grid grid-4">
+    <div class="card" style="text-align: center; padding: 25px 20px;">
+        <div style="width: 60px; height: 60px; background: var(--coral-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-percent" style="color: white; font-size: 24px;"></i>
+        </div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--coral-dark); margin-bottom: 10px;">
+            Лучшая цена
+        </h3>
+        <p style="font-size: 14px; color: var(--coral-text);">
+            Гарантия лучшей цены на рынке
+        </p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 25px 20px;">
+        <div style="width: 60px; height: 60px; background: var(--coral-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-shield-alt" style="color: white; font-size: 24px;"></i>
+        </div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--coral-dark); margin-bottom: 10px;">
+            Безопасность
+        </h3>
+        <p style="font-size: 14px; color: var(--coral-text);">
+            Все туры застрахованы
+        </p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 25px 20px;">
+        <div style="width: 60px; height: 60px; background: var(--coral-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-headset" style="color: white; font-size: 24px;"></i>
+        </div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--coral-dark); margin-bottom: 10px;">
+            Поддержка 24/7
+        </h3>
+        <p style="font-size: 14px; color: var(--coral-text);">
+            Круглосуточная помощь
+        </p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 25px 20px;">
+        <div style="width: 60px; height: 60px; background: var(--coral-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-plane" style="color: white; font-size: 24px;"></i>
+        </div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--coral-dark); margin-bottom: 10px;">
+            Прямые рейсы
+        </h3>
+        <p style="font-size: 14px; color: var(--coral-text);">
+            Собственные чартеры
+        </p>
+    </div>
+</div>
+{% endblock %}
