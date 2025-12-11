@@ -1,289 +1,178 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Туризм</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-            line-height: 1.6;
-        }
+{% extends 'main/base.html' %}
 
-        .header {
-            background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-        }
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
+{% block title %}Coral Travel | Туры и путевки по всему миру{% endblock %}
 
-        /* Поисковая строка */
-        .search-box {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 30px auto;
-            max-width: 800px;
-            padding: 10px;
-        }
-        .search-box input {
-            padding: 14px 20px;
-            width: 100%;
-            max-width: 500px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-        .search-box input:focus {
-            border-color: #007bff;
-        }
-        .search-box button {
-            background: #4384e7;
-            color: white;
-            border: none;
-            padding: 14px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1em;
-            transition: background 0.3s;
-        }
-        .search-box button:hover {
-            background: #89a3ec;
-        }
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <h1 class="hero-title">Найди свой идеальный тур</h1>
+    <p class="hero-subtitle">Более 5000 туров в 50 странах мира. Лучшие цены от проверенного туроператора</p>
+</section>
 
-        .featured-section {
-            padding: 40px 20px;
-            background-color: rgb(255, 255, 255);
-            margin: 20px auto;
-            max-width: 1200px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        .featured-section h2 {
-            color: #0056b3;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2em;
-            font-weight: 600;
-        }
-        .featured-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .featured-card {
-            background: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .featured-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-        }
-        .featured-card i {
-            font-size: 2.5em;
-            color: #007bff;
-            margin-bottom: 15px;
-        }
-        .featured-card h3 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-        .featured-card p {
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        /* Результаты поиска (туры) */
-        .tour-list {
-            display: grid;
-            gap: 20px;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .tour-card {
-            background: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .tour-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 24px rgba(0,0,0,0.1);
-        }
-        .tour-card h2 {
-            color: #000000;
-            margin-bottom: 12px;
-            font-size: 1.6em;
-            font-weight: 600;
-        }
-        .tour-card p {
-            margin: 8px 0;
-            color: #555;
-        }
-        .tour-card .price {
-            font-size: 1.3em;
-            font-weight: 700;
-            color: #4384e7;
-            margin: 10px 0;
-        }
-        .btn {
-            display: inline-block;
-            background: #4384e7;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            margin-top: 12px;
-            transition: background 0.3s;
-            font-size: 1em;
-        }
-        .btn:hover {
-            background: #89a3ec;
-        }
-
-        /* Пустой результат */
-        .empty {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-            font-style: italic;
-            font-size: 1.1em;
-            background: white;
-            border-radius: 12px;
-            margin: 20px auto;
-            max-width: 800px;
-        }
-
-        .footer {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
-        }
-        .footer a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .search-box {
-                flex-direction: column;
-            }
-            .search-box button {
-                padding: 14px;
-            }
-            .featured-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-            .tour-card {
-                padding: 20px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Coraltravel</h1>
-        <h2>🌍 Найдите свой идеальный тур</h2>
-        <p>Бронируйте отели и туры прямо сейчас! Выгодно!</p>
-    </div>
-
-    <form method="get" class="search-box">
-        <input
-            type="text"
-            name="q"
-            placeholder="Поиск по названию или стране (например: Италия, Греция, Бали...)"
-            value="{{ query }}"
+<!-- Search Box -->
+<div class="search-box">
+    <h2 class="search-title">
+        <i class="fas fa-search"></i> Поиск туров
+    </h2>
+    <form method="get" class="search-form">
+        <input 
+            type="text" 
+            name="q" 
+            value="{{ query }}" 
+            placeholder="Введите страну, город или название тура..."
+            class="search-input"
         >
-        <button type="submit">Поиск</button>
+        <button type="submit" class="search-btn">
+            <i class="fas fa-search"></i> Найти туры
+        </button>
     </form>
-
-    <div class="featured-section">
-        <h2>🔥 Надо брать</h2>
-        <div class="featured-grid">
-            <div class="featured-card">
-                <i class="fas fa-plane"></i>
-                <h3>Турция</h3>
-                <p>Отличные отели и цены</p>
-            </div>
-            <div class="featured-card">
-                <i class="fas fa-sun"></i>
-                <h3>Египет</h3>
-                <p>Пляжи и отдых</p>
-            </div>
-            <div class="featured-card">
-                <i class="fas fa-mountain"></i>
-                <h3>Россия</h3>
-                <p>Краснодарский край</p>
-            </div>
-            <div class="featured-card">
-                <i class="fas fa-globe-europe"></i>
-                <h3>Европа</h3>
-                <p>Города и культура</p>
-            </div>
-        </div>
+    {% if query %}
+    <div class="alert alert-warning" style="margin-top: 20px;">
+        <i class="fas fa-filter"></i>
+        Результаты поиска для: "<strong>{{ query }}</strong>"
     </div>
+    {% endif %}
+</div>
 
-    <!-- Результаты поиска -->
-    <div class="tour-list">
-        {% for tour in tours %}
-        <div class="tour-card">
-            <h2>{{ tour.title }}</h2>
-            <p><strong>Страна:</strong> {{ tour.country }}</p>
-            <p><strong>Цена:</strong> {{ tour.price }} руб.</p>
-            <p><strong>Длительность:</strong> {{ tour.duration }} дней</p>
-            <p><strong>Дата начала:</strong> {{ tour.start_date }}</p>
-            <div class="price">Итого: {{ tour.price }} руб.</div>
-            <a href="{% url 'tour_detail' tour.id %}" class="btn">Подробнее</a>
-        </div>
-        {% empty %}
-        <div class="empty">
-            {% if query %}
-                Ничего не найдено по запросу «<strong>{{ query }}</strong>».
-            {% else %}
-                Туры не найдены.
-            {% endif %}
+<!-- Special Offers -->
+{% if tours and not query %}
+<div class="card">
+    <h2 class="card-title">
+        <i class="fas fa-bolt"></i> Горящие туры
+    </h2>
+    <div class="grid grid-2">
+        {% for tour in tours|slice:":2" %}
+        <div class="tour-card" style="border: 2px solid var(--coral-red);">
+            <div class="tour-header" style="background: linear-gradient(135deg, var(--coral-red), var(--coral-orange));">
+                <span class="tour-country">
+                    <i class="fas fa-fire"></i> ГОРЯЩИЙ ТУР
+                </span>
+                <div class="tour-price">{{ tour.price }} ₽</div>
+            </div>
+            <div class="tour-content">
+                <h3 class="tour-title">{{ tour.title }}</h3>
+                <div class="tour-details">
+                    <span><i class="fas fa-flag"></i> {{ tour.country }}</span>
+                    <span><i class="fas fa-calendar"></i> {{ tour.start_date }}</span>
+                    <span><i class="fas fa-clock"></i> {{ tour.duration }} дней</span>
+                </div>
+                <a href="{% url 'tour_detail' tour.id %}" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-eye"></i> Подробнее
+                </a>
+            </div>
         </div>
         {% endfor %}
     </div>
+</div>
+{% endif %}
 
-    <div class="footer">
-        <p>&copy; 2025 Ваш Туроператор. Все права защищены.</p>
-        <p><a href="#">Политика конфиденциальности</a> | <a href="#">Условия использования</a></p>
+<!-- All Tours -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h2 class="card-title" style="margin: 0;">
+            <i class="fas fa-globe-americas"></i> Все туры
+        </h2>
+        {% if tours %}
+        <span style="background: var(--coral-light-blue); color: var(--coral-blue); padding: 8px 15px; border-radius: 20px; font-weight: 600;">
+            {{ tours|length }} туров найдено
+        </span>
+        {% endif %}
     </div>
-</body>
-</html>
+    
+    {% if tours %}
+        <div class="grid grid-3">
+            {% for tour in tours %}
+            <div class="tour-card">
+                <div class="tour-header">
+                    <span class="tour-country">
+                        <i class="fas fa-map-marker-alt"></i> {{ tour.country }}
+                    </span>
+                    <div class="tour-price">{{ tour.price }} ₽</div>
+                </div>
+                <div class="tour-content">
+                    <h3 class="tour-title">{{ tour.title }}</h3>
+                    <div class="tour-details">
+                        <span><i class="fas fa-calendar-alt"></i> {{ tour.start_date }}</span>
+                        <span><i class="fas fa-clock"></i> {{ tour.duration }} дней</span>
+                    </div>
+                    <p style="color: var(--coral-text); font-size: 14px; margin-bottom: 20px; line-height: 1.5;">
+                        Комфортный отдых с перелетом, трансфером и проживанием.
+                    </p>
+                    <a href="{% url 'tour_detail' tour.id %}" class="btn btn-secondary" style="width: 100%;">
+                        <i class="fas fa-info-circle"></i> Подробнее о туре
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 50px 20px;">
+            <i class="fas fa-search" style="font-size: 64px; color: var(--coral-border); margin-bottom: 20px;"></i>
+            <h3 style="font-family: 'Montserrat', sans-serif; color: var(--coral-dark); margin-bottom: 15px;">
+                {% if query %}
+                    Туры не найдены
+                {% else %}
+                    Нет доступных туров
+                {% endif %}
+            </h3>
+            <p style="color: var(--coral-text); margin-bottom: 30px; max-width: 500px; margin: 0 auto 30px;">
+                {% if query %}
+                    По вашему запросу "{{ query }}" ничего не найдено.<br>
+                    Попробуйте изменить параметры поиска.
+                {% else %}
+                    В данный момент в системе нет доступных туров.<br>
+                    Обратитесь к администратору для добавления новых предложений.
+                {% endif %}
+            </p>
+            {% if query %}
+            <a href="{% url 'home' %}" class="btn btn-outline">
+                <i class="fas fa-times"></i> Сбросить поиск
+            </a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<!-- Advantages -->
+<div class="grid grid-4">
+    <div class="card" style="text-align: center; padding: 25px 20px;">
+        <i class="fas fa-shield-alt" style="font-size: 40px; color: var(--coral-green); margin-bottom: 15px;"></i>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--coral-dark); margin-bottom: 10px;">
+            Безопасность
+        </h3>
+        <p style="font-size: 14px; color: var(--coral-text);">
+            Все туры застрахованы, 25 лет на рынке
+        </p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 25px 20px;">
+        <i class="fas fa-percent" style="font-size: 40px; color: var(--coral-red); margin-bottom: 15px;"></i>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--coral-dark); margin-bottom: 10px;">
+            Лучшая цена
+        </h3>
+        <p style="font-size: 14px; color: var(--coral-text);">
+            Гарантия лучшей цены или возврат разницы
+        </p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 25px 20px;">
+        <i class="fas fa-headset" style="font-size: 40px; color: var(--coral-blue); margin-bottom: 15px;"></i>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--coral-dark); margin-bottom: 10px;">
+            Поддержка 24/7
+        </h3>
+        <p style="font-size: 14px; color: var(--coral-text);">
+            Круглосуточная поддержка в поездке
+        </p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 25px 20px;">
+        <i class="fas fa-plane" style="font-size: 40px; color: var(--coral-orange); margin-bottom: 15px;"></i>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--coral-dark); margin-bottom: 10px;">
+            Прямые рейсы
+        </h3>
+        <p style="font-size: 14px; color: var(--coral-text);">
+            Собственные чартеры в популярные направления
+        </p>
+    </div>
+</div>
+{% endblock %}

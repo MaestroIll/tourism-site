@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Coral Travel | Туры по всему миру{% endblock %}</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --coral-red: #FF2E5D;
+            --coral-dark: #0C1E3E;
+            --coral-blue: #0066CC;
+            --coral-light-blue: #E6F2FF;
+            --coral-orange: #FF7A00;
+            --coral-green: #00A859;
+            --coral-gray: #F5F7FA;
+            --coral-text: #333333;
+            --coral-border: #E0E0E0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--coral-text);
+            line-height: 1.6;
+            background-color: var(--coral-gray);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-bar {
+            background: var(--coral-dark);
+            color: white;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .top-bar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .top-bar-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        .top-bar-links a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .main-header {
+            padding: 15px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            background: var(--coral-red);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 28px;
+            color: var(--coral-red);
+        }
+
+        .logo-text span {
+            color: var(--coral-blue);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 35px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--coral-dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            position: relative;
+            padding: 8px 0;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--coral-red);
+        }
+
+        .nav-link.active {
+            color: var(--coral-red);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--coral-red);
+        }
+
+        .admin-btn {
+            background: var(--coral-red);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .admin-btn:hover {
+            background: var(--coral-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Main Content */
+        main {
+            padding: 30px 0 60px;
+            min-height: calc(100vh - 300px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(12, 30, 62, 0.9), rgba(12, 30, 62, 0.9)),
+                        url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 60px 0;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        /* Search Box */
+        .search-box {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .search-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            color: var(--coral-dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid var(--coral-border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Open Sans', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--coral-red);
+        }
+
+        .search-btn {
+            background: var(--coral-red);
+            color: white;
+            border: none;
+            padding: 0 35px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-btn:hover {
+            background: var(--coral-blue);
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border: 1px solid var(--coral-border);
+        }
+
+        .card-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            color: var(--coral-dark);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--coral-red);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 30px;
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background: var(--coral-red);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--coral-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--coral-blue);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--coral-red);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--coral-blue);
+            color: var(--coral-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--coral-blue);
+            color: white;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-pending {
+            background: #FFF3CD;
+            color: #856404;
+        }
+
+        .badge-confirmed {
+            background: #D4EDDA;
+            color: #155724;
+        }
+
+        .badge-cancelled {
+            background: #F8D7DA;
+            color: #721C24;
+        }
+
+        /* Price Tags */
+        .price-tag {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--coral-red);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .price-tag small {
+            font-size: 16px;
+            color: var(--coral-text);
+            font-weight: 400;
+        }
+
+        /* Grid System */
+        .grid {
+            display: grid;
+            gap: 25px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        /* Tour Cards */
+        .tour-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            border: 1px solid var(--coral-border);
+        }
+
+        .tour-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .tour-header {
+            position: relative;
+            height: 200px;
+            background: linear-gradient(135deg, var(--coral-blue), var(--coral-red));
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .tour-country {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--coral-dark);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            align-self: flex-start;
+        }
+
+        .tour-price {
+            background: var(--coral-red);
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 24px;
+            font-weight: 700;
+            align-self: flex-end;
+        }
+
+        .tour-content {
+            padding: 20px;
+        }
+
+        .tour-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            color: var(--coral-dark);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .tour-details {
+            display: flex;
+            justify-content: space-between;
+            color: var(--coral-text);
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--coral-border);
+        }
+
+        .tour-details span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--coral-dark);
+            font-size: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--coral-border);
+            border-radius: 8px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--coral-red);
+            box-shadow: 0 0 0 3px rgba(255, 46, 93, 0.1);
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid transparent;
+        }
+
+        .alert-success {
+            background: #D4EDDA;
+            border-left-color: var(--coral-green);
+            color: #155724;
+        }
+
+        .alert-error {
+            background: #F8D7DA;
+            border-left-color: var(--coral-red);
+            color: #721C24;
+        }
+
+        .alert-warning {
+            background: #FFF3CD;
+            border-left-color: var(--coral-orange);
+            color: #856404;
+        }
+
+        /* Info Items */
+        .info-item {
+            background: var(--coral-gray);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--coral-blue);
+        }
+
+        .info-item-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: var(--coral-dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--coral-dark);
+            color: white;
+            padding: 50px 0 30px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .search-btn {
+                justify-content: center;
+            }
+            
+            .hero-title {
+                font-size: 32px;
+            }
+            
+            .nav-menu {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .top-bar-content {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container top-bar-content">
+            <div class="top-bar-text">
+                <i class="fas fa-phone-alt"></i> Горячая линия: 8-800-555-35-35
+            </div>
+            <div class="top-bar-links">
+                <a href="#"><i class="fas fa-question-circle"></i> Помощь</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i> Офисы</a>
+                <a href="#"><i class="fas fa-heart"></i> Избранное</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container header-content">
+            <a href="{% url 'home' %}" class="logo">
+                <div class="logo-icon">C</div>
+                <div class="logo-text">CORAL<span>TRAVEL</span></div>
+            </a>
+            
+            <div class="nav-menu">
+                <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                    <i class="fas fa-home"></i> Главная
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-plane"></i> Туры
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-hotel"></i> Отели
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-sun"></i> Пляжный отдых
+                </a>
+                <a href="{% url 'admin:index' %}" target="_blank" class="admin-btn">
+                    <i class="fas fa-cog"></i> Админ-панель
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Coral Travel</h3>
+                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                        Один из ведущих туроператоров России. Более 25 лет на рынке туристических услуг.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Направления</h3>
+                    <ul>
+                        <li><a href="#">Турция</a></li>
+                        <li><a href="#">Египет</a></li>
+                        <li><a href="#">ОАЭ</a></li>
+                        <li><a href="#">Таиланд</a></li>
+                        <li><a href="#">Испания</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> 8-800-555-35-35</li>
+                        <li><i class="fas fa-envelope"></i> info@coraltravel.ru</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Москва, ул. Туристическая, 15</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Мы в соцсетях</h3>
+                    <div style="display: flex; gap: 15px; margin-top: 15px;">
+                        <a href="#" style="color: white; font-size: 20px;"><i class="fab fa-vk"></i></a>
+                        <a href="#" style="color: white; font-size: 20px;"><i class="fab fa-telegram"></i></a>
+                        <a href="#" style="color: white; font-size: 20px;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="color: white; font-size: 20px;"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2024 Coral Travel. Все права защищены. Лицензия № РТО 123456</p>
+                <p style="margin-top: 10px; font-size: 13px;">
+                    Информация на сайте не является публичной офертой
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Add active class to current page
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage || 
+                    (currentPage === '/' && link.getAttribute('href') === '{% url "home" %}')) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Add animation to tour cards
+            const tourCards = document.querySelectorAll('.tour-card');
+            tourCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

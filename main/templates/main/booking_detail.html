@@ -1,135 +1,177 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Бронирование #{{ booking.id }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-            color: #2c3e50;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-        }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-weight: 600;
-            text-align: center;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .info-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #4384e7;
-        }
-        .info-item strong {
-            color: #34495e;
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-        .price {
-            font-size: 1.3em;
-            font-weight: 700;
-            color: #4384e7;
-            margin: 15px 0;
-            text-align: center;
-        }
-        .btn {
-            display: inline-block;
-            background: #4384e7;
-            color: white;
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: background 0.3s ease;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-        .btn:hover {
-            background: #89a3ec;
-        }
-        .back-link {
-            display: inline-block;
-            color: #2c3e50;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-                margin: 15px;
-            }
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>✅ Бронирование #{{ booking.id }}</h1>
+{% extends 'main/base.html' %}
 
-{% if messages %}
-<div class="container" style="margin-top: 20px;">
-    {% for message in messages %}
-    <div style="padding: 12px; margin-bottom: 10px; border-radius: 8px; background: {% if message.tags == 'error' %}#f8d7da; color: #721c24;{% elif message.tags == 'success' %}#d4edda; color: #155724;{% else %}#fff3cd; color: #856404;{% endif %};">
-        {{ message }}
-    </div>
-    {% endfor %}
+{% block title %}Бронирование #{{ booking.id }} | Coral Travel{% endblock %}
+
+{% block content %}
+<!-- Search Box -->
+<div class="search-box" style="margin-bottom: 20px;">
+    <form method="get" action="{% url 'home' %}" class="search-form">
+        <input 
+            type="text" 
+            name="q" 
+            placeholder="Поиск других туров..."
+            class="search-input"
+        >
+        <button type="submit" class="search-btn">
+            <i class="fas fa-search"></i> Найти
+        </button>
+    </form>
 </div>
-{% endif %}
 
-        <div class="info-grid">
-            <div class="info-item">
-                <strong>Клиент:</strong> {{ booking.client.name }}
-            </div>
-            <div class="info-item">
-                <strong>Тур:</strong> {{ booking.tour.title }}
-            </div>
-            <div class="info-item">
-                <strong>Отель:</strong> {{ booking.hotel.name }}
-            </div>
-            <div class="info-item">
-                <strong>Транспорт:</strong> {{ booking.transport.type }} - {{ booking.transport.company }}
-            </div>
-            <div class="info-item">
-                <strong>Дата бронирования:</strong> {{ booking.book_date }}
-            </div>
-            <div class="info-item">
-                <strong>Статус:</strong> {{ booking.status }}
+<div class="card">
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <div>
+            <h1 class="card-title" style="margin: 0;">
+                <i class="fas fa-receipt"></i> Бронирование #{{ booking.id }}
+            </h1>
+            <div style="color: var(--coral-text); margin-top: 10px;">
+                Создано: {{ booking.book_date|date:"d.m.Y" }}
             </div>
         </div>
-
-        <div class="price">Итоговая цена: {{ booking.total_price }} руб.</div>
-
-        <a href="{% url 'create_payment' booking.id %}" class="btn">💳 Оплатить бронирование</a>
-        <br><a href="{% url 'home' %}" class="back-link">← Назад к турам</a>
+        <div class="badge badge-{{ booking.status }}" style="font-size: 14px; padding: 10px 20px;">
+            {{ booking.get_status_display }}
+        </div>
     </div>
-</body>
-</html>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}" style="margin-bottom: 25px;">
+                <i class="fas {% if message.tags == 'error' %}fa-exclamation-triangle{% else %}fa-check-circle{% endif %}"></i>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <!-- Booking Info -->
+    <div class="grid grid-2" style="gap: 25px; margin: 30px 0;">
+        <!-- Client Info -->
+        <div class="info-item" style="border-left-color: var(--coral-green);">
+            <div class="info-item-title">
+                <i class="fas fa-user-circle"></i> Информация о клиенте
+            </div>
+            <div style="margin-top: 15px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--coral-text);">ФИО:</span>
+                    <span style="font-weight: 600; color: var(--coral-dark);">{{ booking.client.name }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--coral-text);">Телефон:</span>
+                    <span style="font-weight: 600; color: var(--coral-dark);">{{ booking.client.phone }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--coral-text);">Email:</span>
+                    <span style="font-weight: 600; color: var(--coral-dark);">{{ booking.client.email }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tour Info -->
+        <div class="info-item" style="border-left-color: var(--coral-blue);">
+            <div class="info-item-title">
+                <i class="fas fa-map-marked-alt"></i> Информация о туре
+            </div>
+            <div style="margin-top: 15px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--coral-text);">Тур:</span>
+                    <span style="font-weight: 600; color: var(--coral-dark);">{{ booking.tour.title }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--coral-text);">Страна:</span>
+                    <span style="font-weight: 600; color: var(--coral-dark);">{{ booking.tour.country }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--coral-text);">Даты:</span>
+                    <span style="font-weight: 600; color: var(--coral-dark);">
+                        {{ booking.tour.start_date }} ({{ booking.tour.duration }} дн.)
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hotel Info -->
+        <div class="info-item" style="border-left-color: var(--coral-orange);">
+            <div class="info-item-title">
+                <i class="fas fa-hotel"></i> Проживание
+            </div>
+            <div style="margin-top: 15px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--coral-text);">Отель:</span>
+                    <span style="font-weight: 600; color: var(--coral-dark);">{{ booking.hotel.name }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--coral-text);">Категория:</span>
+                    <span style="color: var(--coral-orange); font-weight: 600;">
+                        {{ booking.hotel.stars }} ★
+                    </span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--coral-text);">Город:</span>
+                    <span style="font-weight: 600; color: var(--coral-dark);">{{ booking.hotel.city }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Transport Info -->
+        <div class="info-item" style="border-left-color: var(--coral-red);">
+            <div class="info-item-title">
+                <i class="fas fa-plane"></i> Транспорт
+            </div>
+            <div style="margin-top: 15px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--coral-text);">Тип:</span>
+                    <span style="font-weight: 600; color: var(--coral-dark);">{{ booking.transport.type }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--coral-text);">Перевозчик:</span>
+                    <span style="font-weight: 600; color: var(--coral-dark);">{{ booking.transport.company }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--coral-text);">Отправление:</span>
+                    <span style="font-weight: 600; color: var(--coral-dark);">
+                        {{ booking.transport.departure|date:"d.m.Y H:i" }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Price Summary -->
+    <div style="background: var(--coral-gray); padding: 25px; border-radius: 10px; margin: 30px 0;">
+        <h3 style="font-family: 'Montserrat', sans-serif; color: var(--coral-dark); margin-bottom: 20px;">
+            <i class="fas fa-calculator"></i> Стоимость бронирования
+        </h3>
+        <div style="max-width: 400px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <span>Стоимость тура:</span>
+                <span>{{ booking.tour.price }} ₽</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <span>Проживание ({{ booking.tour.duration }} ночей):</span>
+                <span>{{ booking.hotel.price_per_night|floatformat:2 }} ₽ × {{ booking.tour.duration }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <span>Транспорт:</span>
+                <span>{{ booking.transport.price }} ₽</span>
+            </div>
+            <hr style="border: none; border-top: 2px solid var(--coral-border); margin: 20px 0;">
+            <div style="display: flex; justify-content: space-between; font-size: 24px; font-weight: 700; color: var(--coral-red);">
+                <span>ИТОГО:</span>
+                <span class="price-tag" style="margin: 0;">{{ booking.total_price }} ₽</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Actions -->
+    <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+        {% if booking.status != 'cancelled' %}
+            <a href="{% url 'create_payment' booking.id %}" class="btn btn-primary" style="padding: 16px 40px;">
+                <i class="fas fa-credit-card"></i> Перейти к оплате
+            </a>
+        {% endif %}
+        <a href="{% url 'home' %}" class="btn btn-outline">
+            <i class="fas fa-home"></i> На главную
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,110 +1,185 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Оплата бронирования #{{ booking.id }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-            color: #2c3e50;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 500px;
-            margin: 30px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-        }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-weight: 600;
-            text-align: center;
-        }
-        .price {
-            font-size: 1.5em;
-            font-weight: 700;
-            color: #4384e7;
-            text-align: center;
-            margin: 20px 0;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        label {
-            font-weight: 500;
-            color: #34495e;
-        }
-        input, select {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: border 0.3s ease;
-        }
-        input:focus, select:focus {
-            outline: none;
-            border-color: #4384e7;
-            box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.2);
-        }
-        button {
-            background: #4384e7;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 500;
-            transition: background 0.3s ease;
-            margin-top: 10px;
-        }
-        button:hover {
-            background: #89a3ec;
-        }
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: #2c3e50;
-            text-decoration: none;
-            font-weight: 500;
-            text-align: center;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-                margin: 15px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>💳 Оплата бронирования #{{ booking.id }}</h1>
-        <div class="price">Сумма к оплате: {{ booking.total_price }} руб.</div>
+{% extends 'main/base.html' %}
 
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Оплатить</button>
-        </form>
+{% block title %}Оплата бронирования #{{ booking.id }} | Coral Travel{% endblock %}
 
-        <a href="{% url 'booking_detail' booking.id %}" class="back-link">← Назад к бронированию</a>
+{% block content %}
+<!-- Search Box -->
+<div class="search-box" style="margin-bottom: 20px;">
+    <form method="get" action="{% url 'home' %}" class="search-form">
+        <input 
+            type="text" 
+            name="q" 
+            placeholder="Поиск других туров..."
+            class="search-input"
+        >
+        <button type="submit" class="search-btn">
+            <i class="fas fa-search"></i> Найти
+        </button>
+    </form>
+</div>
+
+<div class="card">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h1 class="card-title" style="margin: 0;">
+            <i class="fas fa-credit-card"></i> Оплата бронирования
+        </h1>
+        <div style="color: var(--coral-text); margin-top: 10px;">
+            Бронирование #{{ booking.id }} • {{ booking.client.name }}
+        </div>
     </div>
-</body>
-</html>
+    
+    <!-- Booking Info -->
+    <div style="background: var(--coral-light-blue); padding: 25px; border-radius: 10px; margin-bottom: 30px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+            <div>
+                <div style="color: var(--coral-text); font-size: 14px;">Тур</div>
+                <div style="font-weight: 600; color: var(--coral-dark);">{{ booking.tour.title }}</div>
+            </div>
+            <div>
+                <div style="color: var(--coral-text); font-size: 14px;">Отель</div>
+                <div style="font-weight: 600; color: var(--coral-dark);">{{ booking.hotel.name }}</div>
+            </div>
+            <div>
+                <div style="color: var(--coral-text); font-size: 14px;">Статус</div>
+                <span class="badge badge-{{ booking.status }}" style="display: inline-block;">
+                    {{ booking.get_status_display }}
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Payment Amount -->
+    <div style="text-align: center; margin: 30px 0;">
+        <div style="font-size: 14px; color: var(--coral-text); margin-bottom: 10px;">
+            Сумма к оплате
+        </div>
+        <div class="price-tag" style="font-size: 48px;">
+            {{ booking.total_price }} ₽
+        </div>
+    </div>
+    
+    <!-- Payment Form -->
+    <form method="post" class="payment-form" style="max-width: 500px; margin: 0 auto;">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label class="form-label">
+                <i class="fas fa-money-bill-wave"></i> Сумма оплаты
+            </label>
+            <div style="position: relative;">
+                <input 
+                    type="number" 
+                    name="amount" 
+                    value="{{ booking.total_price }}"
+                    class="form-control"
+                    style="text-align: center; font-size: 20px; font-weight: 600; padding-right: 50px;"
+                    required
+                    min="0"
+                    max="{{ booking.total_price }}"
+                    step="0.01"
+                >
+                <span style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--coral-text);">
+                    ₽
+                </span>
+            </div>
+            {% if form.amount.errors %}
+                <div class="alert alert-error" style="margin-top: 10px;">
+                    {{ form.amount.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">
+                <i class="fas fa-credit-card"></i> Способ оплаты
+            </label>
+            <div class="payment-methods" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                {% for value, label in form.payment_method.field.choices %}
+                <label style="cursor: pointer;">
+                    <input 
+                        type="radio" 
+                        name="payment_method" 
+                        value="{{ value }}" 
+                        class="payment-method-input" 
+                        style="display: none;"
+                        {% if forloop.first %}checked{% endif %}
+                    >
+                    <div class="payment-option" 
+                         style="border: 2px solid var(--coral-border); 
+                                padding: 20px 15px; 
+                                border-radius: 10px; 
+                                text-align: center;
+                                transition: all 0.3s;
+                                background: white;">
+                        {% if value == 'cash' %}
+                            <i class="fas fa-money-bill" style="font-size: 30px; color: var(--coral-green); margin-bottom: 10px;"></i>
+                        {% elif value == 'card' %}
+                            <i class="fas fa-credit-card" style="font-size: 30px; color: var(--coral-blue); margin-bottom: 10px;"></i>
+                        {% else %}
+                            <i class="fas fa-globe" style="font-size: 30px; color: var(--coral-red); margin-bottom: 10px;"></i>
+                        {% endif %}
+                        <div style="font-weight: 600; color: var(--coral-dark);">{{ label }}</div>
+                    </div>
+                </label>
+                {% endfor %}
+            </div>
+            {% if form.payment_method.errors %}
+                <div class="alert alert-error" style="margin-top: 10px;">
+                    {{ form.payment_method.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Submit Buttons -->
+        <div style="display: flex; gap: 15px; justify-content: center; margin-top: 40px;">
+            <button type="submit" class="btn btn-primary" style="padding: 16px 40px;">
+                <i class="fas fa-check"></i> Подтвердить оплату
+            </button>
+            <a href="{% url 'booking_detail' booking.id %}" class="btn btn-outline">
+                <i class="fas fa-arrow-left"></i> Назад
+            </a>
+        </div>
+    </form>
+    
+    <!-- Security Info -->
+    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--coral-border); text-align: center;">
+        <div style="display: inline-flex; align-items: center; gap: 10px; color: var(--coral-green);">
+            <i class="fas fa-shield-alt"></i>
+            <span>Безопасная оплата. Все данные защищены</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const paymentOptions = document.querySelectorAll('.payment-option');
+        const paymentInputs = document.querySelectorAll('.payment-method-input');
+        
+        paymentOptions.forEach((option, index) => {
+            option.addEventListener('click', function() {
+                // Remove active class from all options
+                paymentOptions.forEach(opt => {
+                    opt.style.borderColor = 'var(--coral-border)';
+                    opt.style.background = 'white';
+                    opt.style.boxShadow = 'none';
+                });
+                
+                // Add active class to clicked option
+                this.style.borderColor = 'var(--coral-red)';
+                this.style.background = 'var(--coral-light-blue)';
+                this.style.boxShadow = '0 4px 12px rgba(255, 46, 93, 0.1)';
+                
+                // Check corresponding radio input
+                paymentInputs[index].checked = true;
+            });
+        });
+        
+        // Initialize first option as selected
+        if (paymentOptions.length > 0) {
+            paymentOptions[0].style.borderColor = 'var(--coral-red)';
+            paymentOptions[0].style.background = 'var(--coral-light-blue)';
+            paymentOptions[0].style.boxShadow = '0 4px 12px rgba(255, 46, 93, 0.1)';
+        }
+    });
+</script>
+{% endblock %}

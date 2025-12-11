@@ -1,102 +1,141 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Бронирование тура: {{ tour.title }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-            color: #2c3e50;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 600px;
-            margin: 30px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-        }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-weight: 600;
-            text-align: center;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        label {
-            font-weight: 500;
-            color: #34495e;
-        }
-        input, select {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: border 0.3s ease;
-        }
-        input:focus, select:focus {
-            outline: none;
-            border-color: #4384e7;
-            box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.2);
-        }
-        button {
-            background: #4384e7;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 500;
-            transition: background 0.3s ease;
-            margin-top: 10px;
-        }
-        button:hover {
-            background: #89a3ec;
-        }
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: #2c3e50;
-            text-decoration: none;
-            font-weight: 500;
-            text-align: center;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-                margin: 15px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>📝 Бронирование тура: {{ tour.title }}</h1>
+{% extends 'main/base.html' %}
 
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Забронировать</button>
-        </form>
+{% block title %}Бронирование {{ tour.title }} | Coral Travel{% endblock %}
 
-        <a href="{% url 'tour_detail' tour.id %}" class="back-link">← Назад к туру</a>
+{% block content %}
+<!-- Search Box -->
+<div class="search-box" style="margin-bottom: 20px;">
+    <form method="get" action="{% url 'home' %}" class="search-form">
+        <input 
+            type="text" 
+            name="q" 
+            placeholder="Поиск других туров..."
+            class="search-input"
+        >
+        <button type="submit" class="search-btn">
+            <i class="fas fa-search"></i> Найти
+        </button>
+    </form>
+</div>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px;">
+        <div>
+            <h1 class="card-title" style="margin: 0;">Бронирование тура</h1>
+            <div style="color: var(--coral-text); margin-top: 10px;">
+                <strong>{{ tour.title }}</strong> • {{ tour.country }} • {{ tour.start_date }}
+            </div>
+        </div>
+        <div class="price-tag">
+            {{ tour.price }} ₽
+        </div>
     </div>
-</body>
-</html>
+    
+    <form method="post" class="booking-form">
+        {% csrf_token %}
+        
+        <div class="grid grid-2" style="gap: 25px; margin-bottom: 30px;">
+            <!-- Client Selection -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-user"></i> Выберите клиента
+                </label>
+                <select name="client" class="form-control" required>
+                    <option value="">-- Выберите клиента --</option>
+                    {% for client in form.client.field.queryset %}
+                        <option value="{{ client.id }}">{{ client.name }} • {{ client.email }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.client.errors %}
+                    <div class="alert alert-error" style="margin-top: 10px;">
+                        {{ form.client.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Hotel Selection -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-bed"></i> Выберите отель
+                </label>
+                <select name="hotel" class="form-control" required>
+                    <option value="">-- Выберите отель --</option>
+                    {% for hotel in form.hotel.field.queryset %}
+                        <option value="{{ hotel.id }}">
+                            {{ hotel.name }} ({{ hotel.stars }}★) • {{ hotel.price_per_night }} ₽/ночь
+                        </option>
+                    {% endfor %}
+                </select>
+                {% if form.hotel.errors %}
+                    <div class="alert alert-error" style="margin-top: 10px;">
+                        {{ form.hotel.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Transport Selection -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-plane"></i> Выберите транспорт
+                </label>
+                <select name="transport" class="form-control" required>
+                    <option value="">-- Выберите транспорт --</option>
+                    {% for transport in form.transport.field.queryset %}
+                        <option value="{{ transport.id }}">
+                            {{ transport.type }} • {{ transport.company }} • {{ transport.price }} ₽
+                        </option>
+                    {% endfor %}
+                </select>
+                {% if form.transport.errors %}
+                    <div class="alert alert-error" style="margin-top: 10px;">
+                        {{ form.transport.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Status Selection -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-info-circle"></i> Статус бронирования
+                </label>
+                <select name="status" class="form-control" required>
+                    {% for value, label in form.status.field.choices %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
+        <!-- Summary -->
+        <div style="background: var(--coral-light-blue); padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+            <h3 style="font-family: 'Montserrat', sans-serif; color: var(--coral-dark); margin-bottom: 15px;">
+                <i class="fas fa-clipboard-check"></i> Сводка по бронированию
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div>
+                    <div style="color: var(--coral-text); font-size: 14px;">Страна:</div>
+                    <div style="font-weight: 600; color: var(--coral-dark);">{{ tour.country }}</div>
+                </div>
+                <div>
+                    <div style="color: var(--coral-text); font-size: 14px;">Дата начала:</div>
+                    <div style="font-weight: 600; color: var(--coral-dark);">{{ tour.start_date }}</div>
+                </div>
+                <div>
+                    <div style="color: var(--coral-text); font-size: 14px;">Длительность:</div>
+                    <div style="font-weight: 600; color: var(--coral-dark);">{{ tour.duration }} дней</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Submit Buttons -->
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            <button type="submit" class="btn btn-primary" style="padding: 16px 40px;">
+                <i class="fas fa-check-circle"></i> Подтвердить бронирование
+            </button>
+            <a href="{% url 'tour_detail' tour.id %}" class="btn btn-outline">
+                <i class="fas fa-times"></i> Отмена
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
